@@ -70,6 +70,7 @@
               :disabled="$v.$invalid"
               color="primary"
               large
+              @click="submit"
             >{{ texts.toolbar }}</v-btn>
           </v-card-actions>
         </v-card>
@@ -79,6 +80,7 @@
 </template>
 <script>
 import { required, email, minLength } from 'vuelidate/lib/validators'
+import AuthService from './../services/auth-service'
 export default {
   name: 'Login',
   data: () => ({
@@ -148,6 +150,20 @@ export default {
       !password.required && errors.push('A password é obrigatória')
       !password.minLength && errors.push(`A password deve conter pelo menos ${password.$params.minLength.min} caracteres `)
       return errors
+    }
+  },
+  methods: {
+    log () {
+      console.log('vuelidate', this.$v)
+    },
+    async submit () {
+      try {
+        console.log('User: ', this.user)
+        const authData = await AuthService.login(this.user)
+        console.log('AuthData: ', authData)
+      } catch (err) {
+        console.log('Erro: ', err)
+      }
     }
   }
 }
